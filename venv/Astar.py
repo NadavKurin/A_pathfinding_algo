@@ -17,3 +17,21 @@ PURPLE = (128, 0, 128)
 ORANGE = (255, 165 ,0)
 GREY = (128, 128, 128)
 TURQUOISE = (64, 224, 208)
+
+class Node_Spot:
+    def __init__(self, row, col, width, total_rows):
+        self.row = row
+        self.x = row*width
+        self.y = col*width
+        self.color = WHITE
+        self.neighbors = []
+        self.width = width
+        self.total_rows = total_rows
+
+    def get_pos(self):
+        return self.row,self.col
+
+    def is_closed(self):
+        return self.color == RED
+
+    
