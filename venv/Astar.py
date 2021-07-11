@@ -1,5 +1,4 @@
 import pygame
-import Node
 import math
 from queue import PriorityQueue
 
@@ -51,6 +50,9 @@ class Node_Spot:
     def reset(self):
         self.color == WHITE
 
+    def make_start(self):
+        self.color = ORANGE
+
     def make_closed(self):
         self.color = RED
 
@@ -92,3 +94,88 @@ def make_grid(rows, width):
     return grid
 
 def draw_grid(win, rows, width):
+    gap = width // rows
+    for i in range(rows):
+        pygame.draw.line(win, GREY, (0, i * gap), (width, i* gap))
+    for j in range(rows):
+        pygame.draw.line(win, GREY, (j * gap, 0), (j * gap, width))
+
+def draw(win, grid, rows, width):
+    win.fill(WHITE)
+    for node in row:
+        node.draw(win)
+
+    draw_grid(win, rows, width)
+    pygame.display.update()
+
+def get_clicked_pos(mouse_pos, rows, width):
+    gap = width // rows
+    y, x = mouse_pos
+    row =  i // gap
+    col = x // gap
+    return row, col
+
+
+def main(win, width):
+    ROWS = 50
+    grid = make_grid(ROWS, width)
+
+    start = None
+    end = None
+
+    run = True
+    started = False
+
+    while run:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+
+            if started:
+                continue
+
+            if pygame.mouse.get_pressed()[0]: # left mouse button pressed
+                pos = pygame.mouse.get_pos()
+                row, col = get_clicked_pos(pos, ROWS, width)
+                spot = grid[row][col]
+                if not started: #if start spot haven't been clicked yet
+                    start = spot
+                    start.make_start()
+                elif not end: #if end spot haven't been clicked yet
+                    end.make_end()
+                elif spot != end and spot != start:
+                    spot.make_barrier()
+            elif pygame.mouse.get_pressed()[2]: # right mouse button pressed
+                pass
+            
+    pygame.quit()
+
+main()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
