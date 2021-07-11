@@ -90,7 +90,7 @@ def make_grid(rows, width):
         grid.append([])
         for j in range(rows):
             node = Node_Spot(i,j,gap,rows)
-            grid[i].append(spot)
+            grid[i].append(node)
     return grid
 
 def draw_grid(win, rows, width):
@@ -101,17 +101,20 @@ def draw_grid(win, rows, width):
         pygame.draw.line(win, GREY, (j * gap, 0), (j * gap, width))
 
 def draw(win, grid, rows, width):
-    win.fill(WHITE)
-    for node in row:
-        node.draw(win)
+	win.fill(WHITE)
 
-    draw_grid(win, rows, width)
-    pygame.display.update()
+	for row in grid:
+		for spot in row:
+			spot.draw(win)
+
+	draw_grid(win, rows, width)
+	pygame.display.update()
+
 
 def get_clicked_pos(mouse_pos, rows, width):
     gap = width // rows
     y, x = mouse_pos
-    row =  i // gap
+    row =  y // gap
     col = x // gap
     return row, col
 
@@ -127,6 +130,7 @@ def main(win, width):
     started = False
 
     while run:
+        draw(win, grid,ROWS,WIDTH)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -138,19 +142,23 @@ def main(win, width):
                 pos = pygame.mouse.get_pos()
                 row, col = get_clicked_pos(pos, ROWS, width)
                 spot = grid[row][col]
-                if not started: #if start spot haven't been clicked yet
+                if not start: #if start spot haven't been clicked yet
                     start = spot
                     start.make_start()
-                elif not end: #if end spot haven't been clicked yet
+
+                elif not end and spot != start: #if end spot haven't been clicked yet
+                    end = spot
                     end.make_end()
+
                 elif spot != end and spot != start:
                     spot.make_barrier()
+
             elif pygame.mouse.get_pressed()[2]: # right mouse button pressed
                 pass
-            
+
     pygame.quit()
 
-main()
+main(WIN, WIDTH)
 
 
 
